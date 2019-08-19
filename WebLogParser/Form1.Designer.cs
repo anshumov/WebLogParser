@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.dtFrom = new System.Windows.Forms.DateTimePicker();
             this.dtTo = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
@@ -37,6 +38,10 @@
             this.button2 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.tbDomenPath = new System.Windows.Forms.TextBox();
+            this.tbPeriod = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // dtFrom
@@ -101,7 +106,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(274, 9);
+            this.label4.Location = new System.Drawing.Point(334, 9);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(82, 13);
             this.label4.TabIndex = 10;
@@ -109,16 +114,41 @@
             // 
             // tbDomenPath
             // 
-            this.tbDomenPath.Location = new System.Drawing.Point(277, 25);
+            this.tbDomenPath.Location = new System.Drawing.Point(334, 25);
             this.tbDomenPath.Name = "tbDomenPath";
-            this.tbDomenPath.Size = new System.Drawing.Size(282, 20);
+            this.tbDomenPath.Size = new System.Drawing.Size(225, 20);
             this.tbDomenPath.TabIndex = 11;
+            // 
+            // tbPeriod
+            // 
+            this.tbPeriod.Location = new System.Drawing.Point(276, 25);
+            this.tbPeriod.MaxLength = 2;
+            this.tbPeriod.Name = "tbPeriod";
+            this.tbPeriod.Size = new System.Drawing.Size(52, 20);
+            this.tbPeriod.TabIndex = 12;
+            this.tbPeriod.Validating += new System.ComponentModel.CancelEventHandler(this.tbPeriod_Validating);
+            this.tbPeriod.Validated += new System.EventHandler(this.tbPeriod_Validated);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(273, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(55, 13);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "Кол. мес.";
+            // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(571, 126);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.tbPeriod);
             this.Controls.Add(this.tbDomenPath);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.button2);
@@ -132,6 +162,7 @@
             this.Text = "Парсер лог файлов";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -148,6 +179,9 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox tbDomenPath;
+        private System.Windows.Forms.TextBox tbPeriod;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }
 

@@ -19,13 +19,15 @@ namespace WebLogParser
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            dtFrom.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month - 1, 15);
             dtTo.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 14);
-            tbFolder.Text = Properties.Settings.Default.Path;
-            tbDomenPath.Text = IsNullOrEmpty(Properties.Settings.Default.DomenPath)
-                ? "rosneft.ru"
-                : Properties.Settings.Default.DomenPath;
+            var deltaDate = dtTo.Value.AddMonths(-1 * Properties.Settings.Default.Period);
+            dtFrom.Value = new DateTime(deltaDate.Year, deltaDate.Month, 15);
 
+            tbFolder.Text = Properties.Settings.Default.Path;
+            tbPeriod.Text = Properties.Settings.Default.Period.ToString();
+            tbDomenPath.Text = IsNullOrEmpty(Properties.Settings.Default.DomenPath)
+                ? System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName
+                : Properties.Settings.Default.DomenPath;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -124,7 +126,7 @@ namespace WebLogParser
                         FullName = GetADInfo(tbDomenPath.Text, "sAMAccountName",
                             grFields.UserName.Substring(grFields.UserName.IndexOf(@"\", StringComparison.Ordinal) +
                                                         1), "name"),
-                        Host = grFields.Host,
+                        grFields.Host,
                         maxDate = date.Max()
                     })
                 .OrderBy(r => r.FullName)
@@ -167,13 +169,27 @@ namespace WebLogParser
 
         struct LogRecord
         {
-            public string UserName { get; set; }
-            public string IP { get; set; }
-            public DateTime DateTime { get; set; }
-            public string Reference { get; set; }
-            public string Host { get; set; }
-            public string Status { get; set; }
-            public string FileName { get; set; } 
+            public string UserName;
+            public string IP;
+            public DateTime DateTime;
+            public string Reference;
+            public string Host;
+            public string Status;
+            public string FileName;
+        }
+
+        private void tbPeriod_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = !int.TryParse(tbPeriod.Text, out _);
+            errorProvider1.SetError(tbPeriod, "Введено некорректное значение!");
+        }
+
+        private void tbPeriod_Validated(object sender, EventArgs e)
+        {
+            errorProvider1.SetError(tbPeriod, "");
+            Properties.Settings.Default.Period = int.Parse(tbPeriod.Text);
+            var deltaDate = dtTo.Value.AddMonths(-1 * Properties.Settings.Default.Period);
+            dtFrom.Value = new DateTime(deltaDate.Year, deltaDate.Month, 15);
         }
     }
 

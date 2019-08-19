@@ -58,5 +58,17 @@ namespace WebLogParser.Properties {
                 this["DomenPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int Period {
+            get {
+                return ((int)(this["Period"]));
+            }
+            set {
+                this["Period"] = value;
+            }
+        }
     }
 }
