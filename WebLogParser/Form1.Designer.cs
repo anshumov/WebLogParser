@@ -41,6 +41,8 @@
             this.tbPeriod = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -69,14 +71,14 @@
             // 
             // tbFolder
             // 
-            this.tbFolder.Location = new System.Drawing.Point(13, 68);
+            this.tbFolder.Location = new System.Drawing.Point(13, 106);
             this.tbFolder.Name = "tbFolder";
             this.tbFolder.Size = new System.Drawing.Size(516, 20);
             this.tbFolder.TabIndex = 3;
             // 
             // btChoseFolder
             // 
-            this.btChoseFolder.Location = new System.Drawing.Point(535, 68);
+            this.btChoseFolder.Location = new System.Drawing.Point(535, 106);
             this.btChoseFolder.Name = "btChoseFolder";
             this.btChoseFolder.Size = new System.Drawing.Size(24, 20);
             this.btChoseFolder.TabIndex = 4;
@@ -87,7 +89,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 52);
+            this.label2.Location = new System.Drawing.Point(10, 90);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(77, 13);
             this.label2.TabIndex = 5;
@@ -95,7 +97,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(12, 94);
+            this.button2.Location = new System.Drawing.Point(12, 132);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(126, 23);
             this.button2.TabIndex = 9;
@@ -142,11 +144,30 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(12, 64);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(547, 20);
+            this.textBox1.TabIndex = 15;
+            this.textBox1.Text = "default.aspx;index.html;publish.htm";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 48);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(159, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Фильтр по главной странице:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(571, 126);
+            this.ClientSize = new System.Drawing.Size(571, 167);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.tbPeriod);
             this.Controls.Add(this.tbDomenPath);
@@ -182,6 +203,8 @@
         private System.Windows.Forms.TextBox tbPeriod;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ErrorProvider errorProvider1;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label5;
     }
 }
 

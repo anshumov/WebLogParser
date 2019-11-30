@@ -39,7 +39,7 @@ namespace WebLogParser
 
         private void btChoseFolder_Click(object sender, EventArgs e)
         {
-            var fbd = new FolderBrowserDialog();;
+            var fbd = new FolderBrowserDialog();
             fbd.SelectedPath = tbFolder.Text;
             fbd.ShowNewFolderButton = false;
             if (fbd.ShowDialog() == DialogResult.OK)
@@ -66,6 +66,7 @@ namespace WebLogParser
             if (ofd.ShowDialog() != DialogResult.OK) return;
             Properties.Settings.Default.File = ofd.FileName;
             Properties.Settings.Default.Save();
+            var defaultPages = textBox1.Text.Split(';');
 
             var logPattern = new Dictionary<string, int>();
             var records = new List<LogRecord>();
@@ -73,12 +74,12 @@ namespace WebLogParser
             var nameFiles = Directory.GetFiles(tbFolder.Text, "*.log");
             foreach (var nameFile in nameFiles)
             {
-                var fileCreationTime = File.GetCreationTime(nameFile);
-                if (fileCreationTime < dtFrom.Value.Date || fileCreationTime > dtTo.Value.Date.AddDays(1)) continue;
+                var fileLastWriteTime = File.GetLastWriteTime(nameFile);
+                if (fileLastWriteTime < dtFrom.Value.Date || fileLastWriteTime > dtTo.Value.Date.AddDays(1)) continue;
 
-                var readedStrings = File.ReadAllLines(nameFile);
+                var readStrings = File.ReadAllLines(nameFile);
 
-                foreach (var s in readedStrings)
+                foreach (var s in readStrings)
                 {
                     if (s.StartsWith("#Fields:"))
                     {
@@ -101,6 +102,26 @@ namespace WebLogParser
                         var refer = logPattern.ContainsKey("cs(Referer)") ? parseStr[logPattern["cs(Referer)"]] : null;
                         var host = logPattern.ContainsKey("cs-host") ? parseStr[logPattern["cs-host"]] : null;
                         var status = logPattern.ContainsKey("sc-status") ? parseStr[logPattern["sc-status"]] : null;
+                        var csUri = logPattern.ContainsKey("cs-uri-stem") ? parseStr[logPattern["cs-uri-stem"]] : null;
+                        
+                        if (status != null && !status.Contains("200"))
+                        {
+                            continue;
+                        }
+
+                        var brkLoop = true;
+                        if (csUri != null)
+                        {
+                            if (defaultPages.Any(page => csUri.Contains(page)))
+                            {
+                                brkLoop = false;
+                            }
+                        }
+
+                        if (brkLoop && csUri != @"/")
+                        {
+                            continue;
+                        }
 
                         var record = new LogRecord();
                         record.UserName = userName;
@@ -160,7 +181,7 @@ namespace WebLogParser
 
                 return "";
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 adCon.Close();
                 return null;
