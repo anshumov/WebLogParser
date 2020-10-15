@@ -43,6 +43,8 @@
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.chkUTC = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -150,7 +152,8 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(547, 20);
             this.textBox1.TabIndex = 15;
-            this.textBox1.Text = "default.aspx;index.html;publish.htm";
+            this.textBox1.Text = "default.aspx;index.html;publish.htm;emclient.application;PassDesktop.application;" +
+    "PersonPass.aspx;TransportPass.aspx";
             // 
             // label5
             // 
@@ -161,11 +164,33 @@
             this.label5.TabIndex = 14;
             this.label5.Text = "Фильтр по главной странице:";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(144, 132);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(162, 23);
+            this.button1.TabIndex = 16;
+            this.button1.Text = "Собрать среднее за период";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // chkUTC
+            // 
+            this.chkUTC.AutoSize = true;
+            this.chkUTC.Location = new System.Drawing.Point(452, 136);
+            this.chkUTC.Name = "chkUTC";
+            this.chkUTC.Size = new System.Drawing.Size(107, 17);
+            this.chkUTC.TabIndex = 17;
+            this.chkUTC.Text = "UTC time logging";
+            this.chkUTC.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(571, 167);
+            this.Controls.Add(this.chkUTC);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label3);
@@ -205,6 +230,8 @@
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox chkUTC;
     }
 }
 

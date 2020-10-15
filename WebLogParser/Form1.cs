@@ -15,6 +15,7 @@ namespace WebLogParser
         public Form1()
         {
             InitializeComponent();
+            chkUTC.Checked = true;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -48,34 +49,16 @@ namespace WebLogParser
             }
         }
 
-        
-        private void button2_Click(object sender, EventArgs e)
+        private List<LogRecord> GetLogRecords(string[] files)
         {
-            if (IsNullOrEmpty(tbFolder.Text))
-            {
-                MessageBox.Show(@"Выбери папку!");
-                return;
-            }
-
-            var ofd = new SaveFileDialog
-            {
-                Filter = @"Flat Files (*.csv)|*.csv",
-                FileName = Properties.Settings.Default.File
-            };
-
-            if (ofd.ShowDialog() != DialogResult.OK) return;
-            Properties.Settings.Default.File = ofd.FileName;
-            Properties.Settings.Default.Save();
+            var records = new List<LogRecord>();
+            var logPattern = new Dictionary<string, int>();
             var defaultPages = textBox1.Text.Split(';');
 
-            var logPattern = new Dictionary<string, int>();
-            var records = new List<LogRecord>();
-
-            var nameFiles = Directory.GetFiles(tbFolder.Text, "*.log");
-            foreach (var nameFile in nameFiles)
+            foreach (var nameFile in files)
             {
                 var fileLastWriteTime = File.GetLastWriteTime(nameFile);
-                if (fileLastWriteTime < dtFrom.Value.Date || fileLastWriteTime > dtTo.Value.Date.AddDays(1)) continue;
+                if (fileLastWriteTime < dtFrom.Value.Date || fileLastWriteTime > dtTo.Value.Date.AddDays(2)) continue;
 
                 var readStrings = File.ReadAllLines(nameFile);
 
@@ -103,7 +86,7 @@ namespace WebLogParser
                         var host = logPattern.ContainsKey("cs-host") ? parseStr[logPattern["cs-host"]] : null;
                         var status = logPattern.ContainsKey("sc-status") ? parseStr[logPattern["sc-status"]] : null;
                         var csUri = logPattern.ContainsKey("cs-uri-stem") ? parseStr[logPattern["cs-uri-stem"]] : null;
-                        
+
                         if (status != null && !status.Contains("200"))
                         {
                             continue;
@@ -122,13 +105,17 @@ namespace WebLogParser
                         {
                             continue;
                         }
+                        DateTime.TryParse(date, out var d);
+                        TimeSpan.TryParse(time, out var t);
+                        var dt = d.Add(t);
+                        if (chkUTC.Checked) dt = dt.ToLocalTime();
+                        if (dt.Date < dtFrom.Value.Date || dt > dtTo.Value.Date.AddDays(1)) 
+                            continue;
 
                         var record = new LogRecord();
                         record.UserName = userName;
                         record.IP = ipAddr;
-                        DateTime.TryParse(date, out var d);
-                        TimeSpan.TryParse(time, out var t);
-                        record.DateTime = d.Add(t);
+                        record.DateTime = dt;
                         record.Reference = refer;
                         record.Host = host;
                         record.Status = status;
@@ -137,6 +124,30 @@ namespace WebLogParser
                     }
                 }
             }
+
+            return records;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (IsNullOrEmpty(tbFolder.Text))
+            {
+                MessageBox.Show(@"Выбери папку!");
+                return;
+            }
+
+            var ofd = new SaveFileDialog
+            {
+                Filter = @"Flat Files (*.csv)|*.csv",
+                FileName = Properties.Settings.Default.File
+            };
+
+            if (ofd.ShowDialog() != DialogResult.OK) return;
+            Properties.Settings.Default.File = ofd.FileName;
+            Properties.Settings.Default.Save();
+
+            var nameFiles = Directory.GetFiles(tbFolder.Text, "*.log");
+            var records = GetLogRecords(nameFiles);
 
             var strings = records
                 .Where(r => r.UserName != "-" && !IsNullOrEmpty(r.UserName) && r.Status == "200")
@@ -163,8 +174,29 @@ namespace WebLogParser
 
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            var nameFiles = Directory.GetFiles(tbFolder.Text, "*.log");
+            var records = GetLogRecords(nameFiles);
+
+            var avg = records
+                .Where(r => r.UserName != "-" && !IsNullOrEmpty(r.UserName) && r.Status == "200" )
+                .GroupBy(r => new {UserName = r.UserName.ToLower(), r.DateTime.Date})
+                .Select(gp=> new {UserName = gp.Key.UserName, Date = gp.Key.Date })
+                .GroupBy(g => new {Date = g.Date})
+                .Select(s=> s.Count())
+                .Average()
+                ;
+                
+            MessageBox.Show($@"Среднее за период: {Math.Round(avg, 1)}", @"Инфо", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private string GetADInfo(string searchDirectory, string searchField, string searchString, string returnField)
         {
+#if DEBUG
+            return null;
+#endif
             var adCon = new OleDbConnection("Provider=ADSDSOObject;");
             adCon.Open();
             try
@@ -212,6 +244,7 @@ namespace WebLogParser
             var deltaDate = dtTo.Value.AddMonths(-1 * Properties.Settings.Default.Period);
             dtFrom.Value = new DateTime(deltaDate.Year, deltaDate.Month, 15);
         }
+
     }
 
 }
